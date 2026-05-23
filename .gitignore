@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Uploaded photos (runtime data)
+server/photos/*
+!server/photos/.gitkeep
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# macOS
+.DS_Store
+
+# Xcode
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+DerivedData/
+ios-app/*.xcodeproj/xcuserdata/
+ios-app/*.xcworkspace/xcuserdata/
+
+# Logs
+*.log
+npm-debug.log*
