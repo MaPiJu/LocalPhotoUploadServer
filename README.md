@@ -1,95 +1,95 @@
 # Photo Uploader
 
-Système complet pour uploader, consulter, télécharger et supprimer des photos depuis un iPhone ou un navigateur web, via un serveur local (Raspberry Pi).
+A complete system for uploading, viewing, downloading, and deleting photos from an iPhone or a web browser via a local server (Raspberry Pi).
 
 ## Architecture
 
 ```
-server/     → Serveur Node.js/Express (tourne sur Raspberry Pi)
-web-app/    → Application React/Vite (navigateur)
-ios-app/    → Application iOS SwiftUI (iPhone)
+server/     → Node.js/Express server (running on a Raspberry Pi)
+web-app/    → React/Vite application (browser)
+ios-app/    → SwiftUI iOS App (iPhone)
 ```
 
 ---
 
-## server/ — Serveur Node.js
+## server/ — Node.js server
 
-Tourne sur le Raspberry Pi et expose une API REST pour gérer les photos.
+Runs on the Raspberry Pi and exposes a REST API for managing photos.
 
 ### Routes
 
-| Méthode | Route | Description |
+| Method | Route | Description |
 |--------|-------|-------------|
-| `POST` | `/upload` | Upload une ou plusieurs photos (multipart/form-data, champ `photo`) |
-| `GET` | `/images` | Liste toutes les photos stockées (JSON) |
-| `GET` | `/download?file=nom.jpg` | Télécharge une photo unique |
-| `POST` | `/downloads` | Télécharge plusieurs photos en ZIP (`{ files: ["a.jpg", "b.jpg"] }`) |
-| `DELETE` | `/images/:filename` | Supprime une photo du serveur |
-| `GET` | `/photos/:filename` | Sert les fichiers statiques (URL directe pour affichage) |
+| `POST` | `/upload` | Upload one or more photos (multipart/form-data, `photo` field) |
+| `GET` | `/images` | List all stored photos (JSON) |
+| `GET` | `/download?file=filename.jpg` | Downloads a single photo |
+| `POST` | `/downloads` | Downloads multiple photos as a ZIP file (`{ files: [“a.jpg”, “b.jpg”] }`) |
+| `DELETE` | `/images/:filename` | Deletes a photo from the server |
+| `GET` | `/photos/:filename` | Serves static files (direct URL for viewing) |
 
-### Lancer le serveur
+### Start the server
 
 ```bash
 cd server
 npm install
 npm start
-# Serveur disponible sur http://<IP_RASPBERRY>:3000
+# Server available at http://<RASPBERRY_IP>:3000
 ```
 
 ### Configuration
 
-L'IP du Raspberry Pi est à adapter dans les 3 parties du projet. Actuellement configurée sur `192.168.178.114`.
+The Raspberry Pi's IP address must be updated in all three parts of the project. It is currently set to `192.168.178.114`.
 
 ---
 
-## web-app/ — Application React/Vite
+## web-app/ — React/Vite Application
 
-Interface web pour uploader des photos depuis un ordinateur et gérer les photos stockées sur le serveur.
+Web interface for uploading photos from a computer and managing photos stored on the server.
 
-### Fonctionnalités
+### Features
 
-- Sélection et prévisualisation de photos avant upload
-- Upload vers le serveur (photos cochées)
-- Affichage de la galerie du serveur
-- Téléchargement individuel ou en ZIP
-- Suppression depuis le serveur
-- Slideshow des photos sélectionnées
+- Select and preview photos before uploading
+- Upload to the server (selected photos)
+- View the server gallery
+- Download individual photos or as a ZIP file
+- Delete from the server
+- Slideshow of selected photos
 
-### Lancer la web app
+### Launch the web app
 
 ```bash
 cd web-app
 npm install
 npm run dev
-# Disponible sur http://localhost:5173
+# Available at http://localhost:5173
 ```
 
 ---
 
-## ios-app/ — Application iOS SwiftUI
+## ios-app/ — iOS SwiftUI app
 
-Application iPhone pour uploader et gérer les photos directement depuis la photothèque.
+iPhone app for uploading and managing photos directly from the photo library.
 
-### Fonctionnalités
+### Features
 
-- Sélection jusqu'à 10 photos depuis la photothèque
-- Prévisualisation en scroll horizontal
-- Upload vers le serveur en multipart/form-data
-- Galerie du serveur en grille
-- Téléchargement vers la pellicule
-- Suppression depuis le serveur
+- Select up to 10 photos from the photo library
+- Horizontal scroll preview
+- Upload to the server using multipart/form-data
+- Server gallery in grid view
+- Download to the camera roll
+- Delete from the server
 
-### Lancer l'app iOS
+### Launch the iOS app
 
-Ouvrir `ios-app/PhotoUploader.xcodeproj` dans Xcode, sélectionner un simulateur ou un iPhone, puis lancer.
+Open `ios-app/PhotoUploader.xcodeproj` in Xcode, select a simulator or an iPhone, then launch.
 
 ---
 
-## Configuration réseau
+## Network Configuration
 
-L'IP du serveur est codée en dur dans les fichiers suivants — à modifier si l'adresse du Raspberry Pi change :
+The server's IP address is hardcoded in the following files—change these if the Raspberry Pi's address changes:
 
-- `web-app/src/App.jsx` — ligne `const rasp = "192.168.178.114"`
-- `ios-app/PhotoUploader/ContentView.swift` — ligne `URL(string: "http://192.168.178.114:3000/upload")`
-- `ios-app/PhotoUploader/ServerGalleryView.swift` — ligne `let baseURL = "http://192.168.178.114:3000"`
-- `server/server.js` — liste `allowedOrigins` pour le CORS
+- `web-app/src/App.jsx` — line `const rasp = “192.168.178.114”`
+- `ios-app/PhotoUploader/ContentView.swift` — line `URL(string: “http://192.168.178.114:3000/upload”)`
+- `ios-app/PhotoUploader/ServerGalleryView.swift` — line `let baseURL = “http://192.168.178.114:3000”`
+- `server/server.js` — `allowedOrigins` list for CORS
