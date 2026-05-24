@@ -27,3 +27,4 @@ ios-app/*.xcworkspace/xcuserdata/
 # Logs
 *.log
 npm-debug.log*
+.claude/
